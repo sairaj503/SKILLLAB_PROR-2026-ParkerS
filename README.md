@@ -57,37 +57,30 @@ By the final review, this README should clearly show:
 
 ## 1.1 Studio / Group Name
 
-`Project^2`
+`ParkerS`
 
 ## 1.2 Team Members
 
-| Name                  | Primary Role                    | Secondary Role   | Strengths Brought to the Project |
-| --------------        | ------------------------------- | --------------   | -------------------------------- |
-| `Mrugendra Vasmatkar` | `[Electronics / Coding / App ]` | `Documentation`  | `Documentation, Gift of Gab `|
-| `Jyoti Bagate`        | `[Electronics / Fabrication]`   | `[Coding]`       | `Material Handling, Hardware`    |
+| Name              | Primary Role                  | Secondary Role | Strengths Brought to the Project |
+| ----------------- | ----------------------------- | -------------- | -------------------------------- |
+| Dhriti Mohata     | [Electronics / Fabrication]   | [Coding]       | Material Handling, Hardware      |
+| Sairaj Indulkar   | [Electronics / Fabrication]   | [Coding]       | Material Handling, Hardware      |
+| Vivek Thakare     | [Electronics / Fabrication]   | [Coding]       | Material Handling, Hardware      |
+| Werda Wasey       | [Electronics / Fabrication]   | [Coding]       | Material Handling, Hardware      |
 
 ## 1.3 Project Title
 
-`"Project Project"`
-
-`(because Project-or)`
+`Smart Parking System`
 
 <img width="1600" height="1131" alt="image" src="https://github.com/user-attachments/assets/c64bfbd4-b3b7-43d9-83ad-c203a5aa11bc" />
 
 ## 1.4 One-Line Pitch
 
-`A projected, fully customizable time portal where engineering education is done through PUBG battlefield in the comfort of our home`
+`A smart parking system that detects and displays real-time slot occupancy using sensors and camera-based verification.`
 
 ## 1.5 Expanded Project Idea
 
-In 1–2 paragraphs, explain:
-
-- what your project is,
-- what kind of experience it creates,
-- what technologies are involved.
-
-**Response:**  
-`A projected and fully customizable time portal can transform engineering education into an immersive PUBG-style battlefield experience from the comfort of home. In this environment, students can learn engineering concepts by entering a virtual battlefield where challenges, obstacles, and missions are designed around real technical problems. Instead of passively studying theory, learners actively apply concepts such as electronics, coding, sensors, robotics, mechanics, and system design to complete missions, solve problems, and progress through different levels. This approach makes engineering education more interactive, engaging, and practical by combining gaming, simulation, and hands-on problem-solving in a familiar and exciting format.`
+`This project presents a Smart Parking System that combines sensor-based detection with camera-assisted verification to efficiently manage parking spaces. Each parking slot is equipped with an ultrasonic sensor that continuously monitors the presence of an object. When an object is detected, the system triggers a camera module connected to the Raspberry Pi 4 Model B to capture an image and classify whether the object is a vehicle (car/bike) or a non-relevant object such as a human. Based on this classification, the system updates the slot status as occupied or vacant and stores this information in a real-time availability table. This hybrid approach improves accuracy by reducing false detections and optimizes computational efficiency by activating the camera only when necessary. The system is scalable and can be extended with IoT integration, mobile applications, and number plate recognition for smart city implementations.`
 
 ---
 
@@ -116,32 +109,25 @@ What makes your project original?
 
 ## 3.1 User Journey 
 
-Describe exactly how a user will use the project.Make it a story
-**Response:**  
-
-                                                  |
+A driver enters a parking area looking for a place to park his car. Instead of guessing or driving around aimlessly, he notices a display board at the entrance showing the current status of parking slots. It clearly indicates how many slots are occupied and how many are available. As a car leaves a slot, the system instantly updates—changing the slot status from occupied to vacant using sensor detection and camera verification. The user quickly checks the display, sees that a slot is free, and parks his car without confusion or delay. Once he parks, the system detects his car, verifies it, and updates the display again to reflect the new occupancy. This continuous real-time update ensures that every user gets accurate parking information, making the process faster, more efficient, and hassle-free.
 
 
-
+                                  
 ---
 
 # 4. Definition of Success
 
 ## 4.1 Definition of “Usable”
 
-
+A usable smart parking system is one that can reliably detect whether a parking slot is occupied or vacant and clearly display this information to users in real time. The system should respond quickly to changes, such as a vehicle entering or leaving a slot, and update the display without noticeable delay. It must be simple to understand, with clear indicators (LED or LCD) so that users can easily identify parking availability without confusion. Even with a limited number of slots, the system should function accurately and consistently under normal conditions.
 
 ## 4.2 Minimum Usable Version
 
-What is the smallest version of this project that still delivers the core experience?
-
-**Response:**  
-
+The minimum usable version of the project consists of a basic setup with at least one or two parking slots monitored using ultrasonic sensors. Each slot should have an indicator (such as red and green LEDs) to show whether it is occupied or vacant. A central controller like the Raspberry Pi 4 Model B processes the sensor data and updates a simple LCD display showing the total number of available and occupied slots. This version does not require a dashboard but must demonstrate accurate detection and real-time updates.
 
 ## 4.3 Stretch Features
 
-What features are nice to have but not essential?
-
+Stretch features extend the system and make it more intelligent and scalable. These include integrating a camera module to classify detected objects and reduce false positives, adding a database or cloud connectivity to store parking data, and developing a mobile or web application to remotely view slot availability. Additional enhancements can include number plate recognition, automated entry logging, and integration with smart city infrastructure. These features improve accuracy, usability, and real-world applicability of the system.
 
 ---
 
@@ -157,21 +143,21 @@ Check all that apply.
 
 - [x] Sensor-based
 
-- [x] App-connected
+- [ ] App-connected
 
-- [x] Motorized
+- [ ] Motorized
 
 - [ ] Sound-based
 
-- [x] Light-based
+- [ ] Light-based
 
 - [x] Screen/UI-based
 
-- [x] Fabricated structure
+- [ ] Fabricated structure
 
 - [x] Game logic based
 
-- [x] Installation
+- [ ] Installation
 
 - [ ] Other:
 
@@ -187,7 +173,17 @@ Include:
 - physical structure,
 - app interaction if any.
 
-**Response:**  
+**Input:** 
+The system takes input from ultrasonic sensors installed in each parking slot. These sensors detect the presence of an object by measuring distance. When an object is detected, the camera module is triggered to capture an image for verification.
+
+**Processing:**
+A central controller, such as the Raspberry Pi 4 Model B, processes the sensor data. If the ultrasonic sensor detects an object, the system activates the camera and classifies whether the object is a vehicle (car or bike) or something else. Based on this classification, the system decides whether the slot should be marked as occupied or vacant. The status of each slot is then stored in memory and updated continuously.
+
+**Physical Structure:**
+The setup consists of a small parking model with defined slots. Each slot is equipped with an ultrasonic sensor and LEDs. A camera module is positioned to capture images of the slots when triggered. All components are connected to the central controller through wires and mounted on a base structure.
+
+**Output:**
+The system displays the parking status using LEDs and an LCD display. Each slot has a visual indicator (red for occupied, green for vacant), while the LCD shows the total number of available and occupied slots in real time.
 
 ## 5.3 Input / Output Map
 
