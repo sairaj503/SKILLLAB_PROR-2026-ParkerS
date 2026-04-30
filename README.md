@@ -63,8 +63,8 @@ By the final review, this README should clearly show:
 
 | Name              | Primary Role                  | Secondary Role | Strengths Brought to the Project |
 | ----------------- | ----------------------------- | -------------- | -------------------------------- |
-| Dhriti Mohata     | [Electronics / Fabrication]   | [Coding]       | Material Handling, Hardware      |
-| Sairaj Indulkar   | [Electronics / Fabrication]   | [Coding]       | Material Handling, Hardware      |
+| Dhriti Mohata     | [Electronics / Fabrication]   | [Documentation]| Material Handling, Hardware      |
+| Sairaj Indulkar   | [Electronics / Fabrication]   | [Coding]       | Material Handling,Hardware       |
 | Vivek Thakare     | [Electronics / Fabrication]   | [Coding]       | Material Handling, Hardware      |
 | Werda Wasey       | [Electronics / Coding]        | [Documentation]| Software                         |
 
