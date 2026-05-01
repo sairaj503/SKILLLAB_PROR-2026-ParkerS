@@ -284,8 +284,6 @@ Insert a hand-drawn or software-made circuit diagram.
 ## 8.2 Software Logic/Algorithm
 Here is the Software Logic/Algorithm section tailored specifically to your Edge-AI Smart Parking System, matching the exact format of your sample:
 
-### 8.2 Software Logic/Algorithm
-
 - **Startup behavior:**  
   The Raspberry Pi initializes the GPIO pins for the ultrasonic sensor (Trig/Echo) and status LEDs (GPIO 22 Green, GPIO 23 Red). It establishes the I2C connection to the 16x2 LCD and pre-loads the MobileNet SSD (`.caffemodel` and `.prototxt`) into memory via OpenCV. To save resources, the camera begins in a standby/asleep state.
 - **Input handling:**  
@@ -323,9 +321,6 @@ Suggested sequence:
 
 
 
-# 9. Bill of Materials
-
-## 9.1 Full BOM
 # 9. Bill of Materials
 
 ## 9.1 Full BOM
