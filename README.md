@@ -197,7 +197,8 @@ The system displays the parking status using LEDs and an LCD display. Each slot 
 Add an early sketch of the full idea.
 
 **Insert image below:**  
-`[Upload image and link here]`
+`<img width="1152" height="2272" alt="image" src="https://github.com/user-attachments/assets/8db896a4-f7ac-415e-bdc9-bcebd244a392" />
+`
 
 Example:
 
@@ -267,11 +268,9 @@ Insert a hand-drawn or software-made circuit diagram.
 | Power source     | `Official Raspberry Pi USB-C Power Supply (or a high-quality equivalent wall adapter)`                                                                                                                           |
 | Voltage required | `The system requires a stable 5.1V DC input. Internally, power is distributed as 5V to the I2C LCD and 3.3V to the ultrasonic sensor and status LEDs.`                                                                  |
 | Current concerns | `The Raspberry Pi 4B can experience significant current spikes (up to 2.5A - 3.0A) when the camera activates and the CPU processes the MobileNet SSD AI inference. A power supply that cannot deliver a steady 3A will cause "low voltage" warnings, CPU throttling, or sudden system reboots during object detection.`                                       |
-| Safety concerns  | `1. Short Circuits: Exposed jumper wires on the breadboard or accidental bridging of GPIO pins could damage the Pi.``2. Overheating: Continuous or frequent AI inference can cause the Pi's CPU to overheat; adequate passive (heatsinks) or active (fan) cooling is highly recommended.``3. Pin Tolerance: Extreme care must be taken to ensure no 5V line (like the LCD VCC) accidentally touches any of the 3.3V-rated GPIO pins.`|
+| Safety concerns  | `Exposed jumper wires on the breadboard or accidental bridging of GPIO pins could damage the Pi. Continuous or frequent AI inference can cause the Pi's CPU to overheat; adequate passive (heatsinks) or active (fan) cooling is highly recommended. Extreme care must be taken to ensure no 5V line (like the LCD VCC) accidentally touches any of the 3.3V-rated GPIO pins.`|
 
 # 8. Software Planning/
-
-## 8.1 Software Tools
 
 ## 8.1 Software Tools
 
@@ -285,36 +284,24 @@ Insert a hand-drawn or software-made circuit diagram.
 | **libcamerify** | A vital compatibility wrapper utilized to allow legacy OpenCV scripts to interface seamlessly with the V4L2 camera backend on the new Bookworm OS architecture. |
 
 ## 8.2 Software Logic/Algorithm
+Here is the Software Logic/Algorithm section tailored specifically to your Edge-AI Smart Parking System, matching the exact format of your sample:
 
-Describe what the code must do.
+### 8.2 Software Logic/Algorithm
 
-Include:
-
-- startup behavior,
-- input handling,
-- sensor reading,
-- decision logic,
-- output behavior,
-- communication logic,
-- reset behavior.
-
-**Response:**  
-`
-
-- **Sample Startup behavior:**  
-  The Raspi/FPGA initializes motor pins, PWM control, and starts a WiFi access point with a web server. The laptop initializes camera input, tracking system, and projection mapping.
+- **Startup behavior:**  
+  The Raspberry Pi initializes the GPIO pins for the ultrasonic sensor (Trig/Echo) and status LEDs (GPIO 22 Green, GPIO 23 Red). It establishes the I2C connection to the 16x2 LCD and pre-loads the MobileNet SSD (`.caffemodel` and `.prototxt`) into memory via OpenCV. To save resources, the camera begins in a standby/asleep state.
 - **Input handling:**  
-  Movement commands are received from the laptop (pygame sends http requests)
+  The system operates autonomously based on physical environmental triggers rather than human input. The primary input loop listens for distance threshold breaches registered by the ultrasonic polling loop.
 - **Sensor reading:**  
-  The camera continuously captures frames, and OpenCV detects ArUco markers to determine the car’s position and orientation.
+  The HC-SR04 ultrasonic sensor acts as a low-power tripwire, actively polling the parking slot twice a second (2Hz). If the sensor detects an object at a distance of less than 15cm, the system wakes up the OV5647 camera to capture a single, high-resolution frame.
 - **Decision logic:**  
-  The system maps the car’s position into a virtual coordinate system and checks for nearby obstacles or collisions. If movement is valid, the command is allowed; if not, it is blocked or replaced with a feedback action (like a slight shake).
+  The system utilizes "Sensor Fusion." The captured camera frame is passed through the MobileNet SSD inference engine. If the AI detects a "car," "motorbike," or "bicycle" with a confidence score greater than 50%, the system confirms a valid park. If the AI detects a "person" or nothing, it flags the event as a false alarm.
 - **Output behavior:**  
-  The ESP32 drives the motors using PWM signals to control speed and direction. The projector displays the updated game environment, including obstacles, targets, and feedback visuals.
+  Based on the AI's decision, the Pi updates the 16x2 LCD display to read "Slot: OCCUPIED" or "Slot: EMPTY". Simultaneously, it updates the visual status LEDs, turning the Red LED (GPIO 23) on for occupied, or the Green LED (GPIO 22) on for empty.
 - **Communication logic:**  
-  The laptop sends HTTP requests (e.g., `/forward`, `/left`) to the ESP32 over WiFi. The ESP32 parses these commands and executes motor actions.
+  Communication is handled internally via hardware protocols. The Python script sends string data over the I2C bus (SDA/SCL) to update the LCD screen, communicates with the camera via the CSI interface utilizing the `libcamerify` wrapper/V4L2 backend, and drives the LEDs via standard GPIO high/low signals.
 - **Reset behavior:**  
-  If no command is received within a short timeout, the ESP32 stops the motors. The game resets when a level is completed or restarted.`
+  If the ultrasonic sensor reads a distance greater than 15cm (indicating the vehicle has left) or if the AI flags a false alarm, the system immediately resets the slot status to EMPTY, updates the LCD and Green LED, puts the camera back to sleep, and returns to the standard 2Hz ultrasonic polling loop.
 
 ## 8.3 Code Flowchart
 
