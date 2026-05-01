@@ -354,12 +354,12 @@ The Raspberry Pi 4B was chosen as the main controller instead of a standard micr
 
 | Budget Item           | Estimated Cost              |
 | --------------------- | ---------------------------:|
-| Electronics           | `[1010]`                     |
-| Mechanical parts      | `[200]`                     |
-| Fabrication materials | `[0 (Aldready Owned     )]` |
-| Purchased extras      | `[0]`                       |
-| Contingency           | `[300]`                     |
-| **Total**             | `[1510]`                     |
+| Electronics           | `1010`                     |
+| Mechanical parts      | `200`                     |
+| Fabrication materials | `0 (Aldready Owned)` |
+| Purchased extras      | `0`                       |
+| Contingency           | `300`                     |
+| **Total**             | `1510`                     |
 
 ## 9.5 Budget Reflection
 
