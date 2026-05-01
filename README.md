@@ -264,10 +264,16 @@ Insert a hand-drawn or software-made circuit diagram.
 
 | Question         | Response                                                                                                                                          |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Power source     | `Battery (Li-ion pack)`                                                                                                                           |
-| Voltage required | `~6–8.4V for motors (via driver), stepped down to 5V for ESP32 (buck converter)`                                                                  |
-| Current concerns | `Motors can draw high current under load, which may cause voltage drops affecting ESP32 and WiFi stability`                                       |
-| Safety concerns  | `Avoid over-discharging Li-ion batteries, ensure proper voltage regulation, prevent short circuits, and secure wiring to avoid loose connections` |
+| Power source     | `Official Raspberry Pi USB-C Power Supply (or a high-quality equivalent wall adapter)`                                                                                                                           |
+| Voltage required | `The system requires a stable 5.1V DC input. Internally, power is distributed as 5V to the I2C LCD and 3.3V to the ultrasonic sensor and status LEDs.`                                                                  |
+| Current concerns | `The Raspberry Pi 4B can experience significant current spikes (up to 2.5A - 3.0A) when the camera activates and the CPU processes the MobileNet SSD AI inference. A power supply that cannot deliver a steady 3A will cause "low voltage" warnings, CPU throttling, or sudden system reboots during object detection.`                                       |
+| Safety concerns  | `1. Short Circuits: Exposed jumper wires on the breadboard or accidental bridging of GPIO pins could damage the Pi.
+
+
+2. Overheating: Continuous or frequent AI inference can cause the Pi's CPU to overheat; adequate passive (heatsinks) or active (fan) cooling is highly recommended.
+
+
+3. Pin Tolerance: Extreme care must be taken to ensure no 5V line (like the LCD VCC) accidentally touches any of the 3.3V-rated GPIO pins.` |
 
 ---
 
@@ -275,12 +281,16 @@ Insert a hand-drawn or software-made circuit diagram.
 
 ## 8.1 Software Tools
 
-| Tool / Platform                | Purpose                                        |
-| ------------------------------ | ---------------------------------------------- |
-| `[MicroPython]`                | `Control ESP32`                                |
-| `[Python/PyGame/OpenCV]`       | `Track markers, game logic, create projection` |
-| `[Fusion/Blender/Illustrator]` | `[Prototyping structure]`                      |
-|                                |                                                |
+## 8.1 Software Tools
+
+| Tool / Platform | Purpose |
+| :--- | :--- |
+| **Raspberry Pi OS (Bookworm)** | The underlying Debian-based operating system providing hardware management, GPIO access, and the execution environment. |
+| **Python 3** | The primary programming language used to integrate sensor polling, I2C communication, and the AI inference pipeline. |
+| **Thonny IDE** | A lightweight Integrated Development Environment used for writing, executing, and debugging the Python scripts directly on the Pi. |
+| **OpenCV (cv2)** | The core computer vision library used to handle camera streams, preprocess image frames (`blobFromImage`), and execute the deep learning model. |
+| **MobileNet SSD (Caffe)** | A highly efficient, pre-trained object detection neural network used to identify specific classes (cars, motorbikes, bicycles) in real-time on edge hardware. |
+| **libcamerify** | A vital compatibility wrapper utilized to allow legacy OpenCV scripts to interface seamlessly with the V4L2 camera backend on the new Bookworm OS architecture. |
 
 ## 8.2 Software Logic/Algorithm
 
