@@ -57,7 +57,7 @@ By the final review, this README should clearly show:
 
 ## 1.1 Studio / Group Name
 
-`ParkerS`
+`Team ParkerS`
 
 ## 1.2 Team Members
 
@@ -86,20 +86,18 @@ By the final review, this README should clearly show:
 
 ## 2.1 References
 
-List what inspired the project.
-
 | Source Type | Title / Link                                                        | What Inspired You                                                                         |
 | ----------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `[Video]`   | `https://www.instagram.com/reel/DW4CT7WCDry/?igsh=cXg3dzAxYmdncDBo` | `How projection mapping can be used to create interactive digital + physical experiences` |
-|             |                                                                     |                                                                                           |
-|             |                                                                     |                                                                                           |
+| `[Reference code]`   | `https://github.com/djmv/MobilNet_SSD_opencv` | `Provided the core reference for integrating the MobileNet SSD Caffe model with OpenCV's DNN module, demonstrating how to efficiently process image frames and filter for vehicle classes in real-time` |
+| `[Video]`            | `https://youtu.be/Vfo7DS7-D-0?si=bgHEID2KTqGmmKqK` | `Demonstrated the core visual logic of tracking parking slot occupancy using a top-down camera feed and computer vision, inspiring the object detection approach for marking slots as "OCCUPIED" or "EMPTY" in my physical prototype`             |
 
 ## 2.2 Original Twist
 
-What makes your project original?
+Honestly, most edge-AI projects we looked at just blast the camera feed 24/7. When you do that on a Raspberry Pi, it gets crazy hot, throttles the CPU, and wastes a ton of power. On the flip side, the basic, cheap parking systems just use ultrasonic sensors, but those are kind of dumb—if a person walks by or someone drops a box in the spot, the sensor gets blocked and flags the slot as "occupied."
 
-**Response:**  
+Our original twist is mashing both approaches together to cover each other's flaws. We're using a "Sensor Fusion" tripwire method. The Pi's camera actually stays asleep most of the time to save resources. The system only relies on the low-power ultrasonic sensor polling in the background.
 
+It’s only after the ultrasonic sensor detects an object within 15cm that it wakes up the camera and runs the heavy MobileNet AI model. Basically, the ultrasonic sensor asks "Is something there?" and the AI wakes up just long enough to answer "Is it actually a vehicle?" It makes the system way more thermally efficient for the hardware while completely killing the false-alarm problem.
 
 ---
 
@@ -107,10 +105,7 @@ What makes your project original?
 
 ## 3.1 User Journey 
 
-A driver enters a parking area looking for a place to park his car. Instead of guessing or driving around aimlessly, he notices a display board at the entrance showing the current status of parking slots. It clearly indicates how many slots are occupied and how many are available. As a car leaves a slot, the system instantly updates—changing the slot status from occupied to vacant using sensor detection and camera verification. The user quickly checks the display, sees that a slot is free, and parks his car without confusion or delay. Once he parks, the system detects his car, verifies it, and updates the display again to reflect the new occupancy. This continuous real-time update ensures that every user gets accurate parking information, making the process faster, more efficient, and hassle-free.
-
-
-                                  
+A driver enters a parking area looking for a place to park his car. Instead of guessing or driving around aimlessly, he notices a display board at the entrance showing the current status of parking slots. It clearly indicates how many slots are occupied and how many are available. As a car leaves a slot, the system instantly updates—changing the slot status from occupied to vacant using sensor detection and camera verification. The user quickly checks the display, sees that a slot is free, and parks his car without confusion or delay. Once he parks, the system detects his car, verifies it, and updates the display again to reflect the new occupancy. This continuous real-time update ensures that every user gets accurate parking information, making the process faster, more efficient, and hassle-free.                                
 ---
 
 # 4. Definition of Success
@@ -161,16 +156,6 @@ Check all that apply.
 
 ## 5.2 High-Level System Description
 
-Explain how the system works in simple terms.
-
-Include:
-
-- input,
-- processing,
-- output,
-- physical structure,
-- app interaction if any.
-
 **Input:** 
 The system takes input from ultrasonic sensors installed in each parking slot. These sensors detect the presence of an object by measuring distance. When an object is detected, the camera module is triggered to capture an image for verification.
 
@@ -185,8 +170,13 @@ The system displays the parking status using LEDs and an LCD display. Each slot 
 
 ## 5.3 Input / Output Map
 
-| System Part                              | Type            | What It Does                                                               |
-
+| System Part | Type | What It Does |
+| :--- | :--- | :--- |
+| **HC-SR04 Ultrasonic Sensor** | Input | Continuously polls distance to act as a hardware tripwire (triggers at < 15cm). |
+| **OV5647 Camera Module** | Input | Captures high-resolution image frames when triggered for AI object detection. |
+| **16x2 I2C LCD Display** | Output | Displays real-time text feedback to the driver ("Slot: OCCUPIED" or "Slot: EMPTY"). |
+| **Green LED** | Output | Provides high-visibility visual confirmation that the parking slot is available. |
+| **Red LED** | Output | Provides high-visibility visual confirmation that the parking slot is taken. |
 
 ---
 
