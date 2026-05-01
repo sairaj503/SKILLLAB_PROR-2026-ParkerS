@@ -267,9 +267,7 @@ Insert a hand-drawn or software-made circuit diagram.
 | Power source     | `Official Raspberry Pi USB-C Power Supply (or a high-quality equivalent wall adapter)`                                                                                                                           |
 | Voltage required | `The system requires a stable 5.1V DC input. Internally, power is distributed as 5V to the I2C LCD and 3.3V to the ultrasonic sensor and status LEDs.`                                                                  |
 | Current concerns | `The Raspberry Pi 4B can experience significant current spikes (up to 2.5A - 3.0A) when the camera activates and the CPU processes the MobileNet SSD AI inference. A power supply that cannot deliver a steady 3A will cause "low voltage" warnings, CPU throttling, or sudden system reboots during object detection.`                                       |
-| Safety concerns  | `1. Short Circuits: Exposed jumper wires on the breadboard or accidental bridging of GPIO pins could damage the Pi.`
-`2. Overheating: Continuous or frequent AI inference can cause the Pi's CPU to overheat; adequate passive (heatsinks) or active (fan) cooling is highly recommended.`
-`3. Pin Tolerance: Extreme care must be taken to ensure no 5V line (like the LCD VCC) accidentally touches any of the 3.3V-rated GPIO pins.`|
+| Safety concerns  | `1. Short Circuits: Exposed jumper wires on the breadboard or accidental bridging of GPIO pins could damage the Pi.``2. Overheating: Continuous or frequent AI inference can cause the Pi's CPU to overheat; adequate passive (heatsinks) or active (fan) cooling is highly recommended.``3. Pin Tolerance: Extreme care must be taken to ensure no 5V line (like the LCD VCC) accidentally touches any of the 3.3V-rated GPIO pins.`|
 
 # 8. Software Planning/
 
