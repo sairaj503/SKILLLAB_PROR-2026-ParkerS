@@ -219,8 +219,6 @@ Add a sketch with labels showing:
 - output elements.
 
 **Insert image below:**  
-`[Upload image and link here]`
-<img width="1600" height="1200" alt="image" src="https://github.com/user-attachments/assets/95637f31-b4e7-4427-a9e1-4b63fbeb0ac5" />
 
 ## 6.3 Approximate Dimensions
 
@@ -328,47 +326,53 @@ Suggested sequence:
 # 9. Bill of Materials
 
 ## 9.1 Full BOM
+# 9. Bill of Materials
 
-| Item                             | Quantity | In Kit? | Need to Buy? | Estimated Cost | Material / Spec               | Why This Choice?          |
-| -------------------------------- | --------:| ------- | ------------ | --------------:| ----------------------------- | ------------------------- |
-| `[RASPI]`                        | `1`      | `Yes`   | `No`         | `0`            | `38 Pin ESP32`                | `[To control components]` |
-| `[Motor Driver]`                 | `[1]`    | `[Yes]` | `[No]`       | `0`            | `[LN296]`                     | `[To drive both motors]`  |
-| `[DC Motors and wheel]`          | `[2]`    | `[No]`  | `[Yes]`      | `[150]`        | `[BO Motors and 6 cm wheels]` | `[high torque motors]`    |
-| `[Buck Converter]`               | `[1]`    | `[No]`  | `[Yes]`      | `[75]`         |                               |                           |
-| `[Li-ion batteries with holder]` | `[1]`    | `[No]`  | `[Yes]`      | `[200]`        |                               |                           |
+## 9.1 Full BOM
+
+| Item | Quantity | In Kit? | Need to Buy? | Estimated Cost | Material / Spec | Why This Choice? |
+| :--- | :---: | :---: | :---: | :--- | :--- | :--- |
+| **Raspberry Pi 4B** | 1 | No | No (Owned) | ₹4,500 - ₹6,000 | 4GB/8GB RAM | Provides the necessary CPU overhead to run the MobileNet SSD inference engine locally at the edge. |
+| **MicroSD Card** | 1 | No | No (Owned) | ₹400 | 32GB+ Class 10 | Required to boot Raspberry Pi OS (Bookworm) and store the Caffe model and prototxt files. |
+| **RPi Camera (OV5647)** | 1 | Yes | No | ₹500 | 5MP, CSI Interface | Connects directly to the hardware CSI port, freeing up USB ports and providing sufficient resolution for AI detection. |
+| **Ultrasonic Sensor (HC-SR04)** | 1 | Yes | No | ₹100 | 3.3V Compatible | Acts as a low-power tripwire to wake the camera, ensuring the AI only runs when a vehicle is present. |
+| **16x2 I2C LCD Display** | 1 | Yes | No | ₹250 | 5V, PCF8574 Backpack | The I2C protocol requires only two GPIO pins (SDA/SCL), saving valuable pins for other sensors. |
+| **Status LEDs** | 2 | Yes | No | ₹10 | 5mm (1 Red, 1 Green) | Provides immediate, high-visibility status updates (Occupied vs. Empty) at the hardware level. |
+| **Breadboard & Jumpers** | 1 Set | Yes | No | ₹150 | Half-size, M-F / M-M | Facilitates quick, solderless prototyping and testing of the sensor and LED circuits. |
+| **Official RPi Power Supply** | 1 | No | No (Owned) | ₹900 | 5.1V / 3.0A USB-C | Prevents low-voltage warnings and CPU throttling during power-intensive AI inference tasks. |
 
 ## 9.2 Material Justification
 
-Explain why you selected your main materials and components.
-
-**Response:**  
-`DC motors (BO motors) were chosen instead of servos or steppers because the system requires continuous rotation for movement rather than precise angular control (Previously, we were considering using steppers as we were planning on tracking movement on the ESP using its relative position from an origin, but since we're using a camera now, this is not required). A motor driver (L298N) was used to allow bidirectional control and speed variation using PWM.`
+The Raspberry Pi 4B was chosen as the main controller instead of a standard microcontroller (like an ESP32) because the system requires a full operating system and significant CPU/RAM overhead to execute the MobileNet SSD deep learning model locally at the edge. An HC-SR04 ultrasonic sensor was integrated as a low-power "tripwire" rather than relying on a continuous live video feed (which was avoided as continuous video processing would quickly lead to thermal throttling and high resource consumption on the Pi). This Sensor Fusion approach ensures that the OV5647 camera—selected for its native CSI hardware connection rather than relying on a slower, latency-prone USB webcam—only wakes up to capture a frame when an object is physically detected within 15cm. Finally, a 16x2 LCD with an I2C backpack was utilized instead of a standard parallel display to drastically reduce GPIO pin usage (requiring only SDA and SCL), leaving plenty of stable 3.3V pins for the direct ultrasonic and status LED connections.
 
 
 ## 9.3 Items You chose
 
-| Item                 | Why Needed               | Purchase Link | Latest Safe Date to Procure | Status       |
-| -------------------- | ------------------------ | ------------- | --------------------------- | ------------ |
-| `BO Motors + Wheels` | `Drive system for car`   | `robu.in`     | `15th April`                | `[Received]` |
-| `Buck Converter`     | `Stable power for ESP32` | `local store` | `before testing`            | `[Received]` |
-| `Li-ion Batteries`   | `Portable power`         | `local store` | `before testing`            | `Recieved`   |
+| Item                 | Why Needed               |
+| -------------------- | ------------------------ | 
+| `RPi Camera (OV5647)` | `Capture frames for AI inference`   | 
+| `Ultrasonic Sensor (HC-SR04)`     |`Low-power hardware tripwire` | 
+| `16x2 I2C LCD Display`   | `Visual text status (Occupied/Empty)`      | 
+| `Status LEDs`          | `Hardware status signaling`|
 
 ## 9.4 Budget Summary
 
 | Budget Item           | Estimated Cost              |
 | --------------------- | ---------------------------:|
-| Electronics           | `[400]`                     |
+| Electronics           | `[1010]`                     |
 | Mechanical parts      | `[200]`                     |
-| Fabrication materials | `[0 (Available on campus)]` |
+| Fabrication materials | `[0 (Aldready Owned     )]` |
 | Purchased extras      | `[0]`                       |
 | Contingency           | `[300]`                     |
-| **Total**             | `[900]`                     |
+| **Total**             | `[1510]`                     |
 
 ## 9.5 Budget Reflection
 
-If your cost is too high, what can be simplified, removed, substituted, or shared?
+To significantly reduce costs, the architecture could be modified in the following ways:
 
-**Response:**  
+1. Compute Substitution (The Pi 4B): For an individual edge node, the Pi 4B could be swapped for a cheaper Raspberry Pi Zero 2 W. However, this trade-off requires software optimization; the MobileNet SSD inference model would need to be heavily quantized (e.g., using TFLite with INT8 precision) to run smoothly on the Zero's limited RAM and CPU architecture.
+
+2. Component Removal (The LCD): The 16x2 I2C LCD display could be eliminated. The red and green status LEDs already provide immediate, high-visibility feedback to the driver at the physical parking spot. The text-based slot data can simply be routed to a headless web dashboard or a centralized parking lot display board, reducing both hardware costs and enclosure complexity at the individual slot level.
 
 ---
 
