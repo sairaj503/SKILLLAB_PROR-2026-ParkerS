@@ -238,24 +238,18 @@ Add a sketch with labels showing:
 
 | Component                 | Quantity | Purpose                               |
 | ------------------------- | --------:| ------------------------------------- |
-| `[Raspi/FPGA]`                 | `1`      | `[Main controller]`                   |
-| `[L298N Motor Driver]`    | `1`      | `[Control Motors]`                    |
-| `[BO Motors]`             | `2`      | `[Rotate wheels]`                     |
-| `[Buck Converter]`        | `1`      | `[Power ESP32]`                       |
-| `[Li Ion Battery Pack]`   | `2`      | `[Power]`                             |
-| `[Projector]`             | `1`      | `[Display obstacles]`                 |
-| `Camera (Webcam / Phone)` | `1`      | `[Tracks car position using markers]` |
+| `[Raspberry Pi 4B]`       | `1`      | `[Main controller]`                   |
+| `[HC-SR04 Ultrsonic sensor]`| `1`      | `[Acts as the "low-power" trigger; measures distance to detect an arriving vehicle within 15cm]`      |
+| `[I2C 16x2 LCD Display]`    | `1`      | `[Provides real-time visual feedback]`|
+| `Rpi camera `             | `1`      | `[Captures image frames for object detection when triggered by the "tripwire."]` |
 
 ## 7.2 Wiring Plan
 
-Describe the main electrical connections.
+The Raspberry Pi 4B is connected to the 3.3V-compatible ultrasonic sensor (HC-SR04) using two GPIO pins. The trigger pin (Trig) is connected to GPIO 17 to send the polling signal, and the echo pin (Echo) is connected directly to GPIO 27 to safely receive the return pulse without needing a voltage divider. The camera module (OV5647) handles image capture separately and is connected directly to the Pi using the dedicated CSI ribbon cable port.
 
-**sample Response:**  
-`The RASPI is connected to the motor driver (L298N) using four GPIO pins (18,19; 22,23) to control motor direction (IN1, IN2, IN3, IN4). Two PWM-capable pins (ENA and ENB; 25 and 26) are connected to control the speed of each motor.
+The system's visual feedback is handled by an I2C LCD and two 3.3V status LEDs. The 16x2 LCD uses two dedicated I2C pins: the data line (SDA) is connected to GPIO 2, and the clock line (SCL) is connected to GPIO 3. The status LEDs are connected to standard GPIO pins, with the green LED connected to GPIO 22 and the red LED connected to GPIO 23.
 
-The motors are connected to the output terminals of the motor driver. The motor driver is powered directly by the battery pack (higher voltage), while the ESP32 receives regulated 5V from the buck converter.
-
-All components share a common ground to ensure stable operation. The projector and camera are connected to the laptop, which handles tracking and game logic separately.`
+Power distribution is split based on the components' specific voltage requirements. The LCD display is powered by the Pi's 5V supply pin, while the ultrasonic sensor receives regulated power from the Pi's 3.3V supply pin. The LEDs operate safely on the 3.3V logic provided directly by their assigned GPIO pins. All components share a common ground with the Raspberry Pi to ensure stable logic levels and reliable system operation.
 
 ## 7.3 Circuit Diagram/architecture diagram
 
