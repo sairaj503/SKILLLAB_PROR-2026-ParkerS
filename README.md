@@ -183,13 +183,6 @@ The system displays the parking status using LEDs and an LCD display. Each slot 
 
 ## 6.1 Labeled Build Sketch/architecture/flow diagram/algorithm
 
-Add a sketch with labels showing:
-
-- structure,
-- electronics placement,
-- user touch points,
-- moving parts,
-- output elements.
 
 **Insert image below:**  
 <img width="1152" height="2272" alt="image" src="images/Architecture_sketch.jpeg" />
@@ -229,7 +222,7 @@ Insert a hand-drawn or software-made circuit diagram.
 
 **Insert image below:**  
 `[Upload image and link here]`
-<img width="867" height="1156" alt="" src="" />
+<img width="867" height="1156" alt="" src="images/smart_parking_architecture.jpg" />
 
 
 # 7.4. Power Plan
@@ -274,25 +267,8 @@ Here is the Software Logic/Algorithm section tailored specifically to your Edge-
 
 ## 8.3 Code Flowchart
 
-Insert a flowchart showing your code logic.
-
-Suggested sequence:
-
-- start,
-- initialize,
-- wait for input,
-- read input,
-- decision,
-- trigger output,
-- repeat or reset,
-- error handling.
-
 **Insert image below:**  
-<img width="1600" height="1200" alt="image" src="" />
-<img width="1600" height="1200" alt="image" src="" />
-
-
-
+<img width="1600" height="1200" alt="image" src="images/Codelogic_flowchart.jpeg" />
 
 # 9. Bill of Materials
 
