@@ -51,11 +51,13 @@
 
 ## 2.2 Original Twist
 
-Honestly, most edge-AI projects we looked at just blast the camera feed 24/7. When you do that on a Raspberry Pi, it gets crazy hot, throttles the CPU, and wastes a ton of power. On the flip side, the basic, cheap parking systems just use ultrasonic sensors, but those are kind of dumb—if a person walks by or someone drops a box in the spot, the sensor gets blocked and flags the slot as "occupied."
+Most basic, cheap smart parking systems rely entirely on ultrasonic sensors. However, those sensors are kind of "dumb"—if a person walks by or someone drops a box in the parking spot, the sensor simply gets blocked and falsely flags the slot as "occupied." On the flip side, relying *only* on a camera can sometimes be tricked by 2D images, shadows, or passing traffic.
 
-Our original twist is mashing both approaches together to cover each other's flaws. We're using a "Sensor Fusion" tripwire method. The Pi's camera actually stays asleep most of the time to save resources. The system only relies on the low-power ultrasonic sensor polling in the background.
+Our original twist is mashing both approaches together to cover each other's flaws using a **Sensor Fusion** method. 
 
-It’s only after the ultrasonic sensor detects an object within 15cm that it wakes up the camera and runs the heavy MobileNet AI model. Basically, the ultrasonic sensor asks "Is something there?" and the AI wakes up just long enough to answer "Is it actually a vehicle?" It makes the system way more thermally efficient for the hardware while completely killing the false-alarm problem.
+We utilize the Raspberry Pi to run a continuous video feed where the MobileNet AI acts as a "smart filter." The AI actively monitors the frame to answer, *"Is this object actually a car or a person?"* Simultaneously, the HC-SR04 ultrasonic sensor runs in tandem to provide physical depth confirmation. 
+
+Basically, the AI confirms *what* the object is, and the ultrasonic sensor confirms *where* it is. By combining the "smart" visual classification of the AI with the physical proximity confirmation of the hardware sensor, we completely killed the false-alarm problem that plagues standard automated parking systems.
 
 ---
 
@@ -511,7 +513,7 @@ Iteration: Successfully pivoted from a laggy 30-second polling loop to a high-pe
 
 ## 18.4 If You Had One More hour
 
-If given one more hour, I would focus on designing a custom 3D-printed enclosure to securely house the Raspberry Pi 4B and provide a fixed, vibration-resistant mount for the camera and ultrasonic sensors. This would ensure the "tripwire" alignment remains consistent in real-world environments. Additionally, I would implement a "Screen Timeout" logic for the I2C LCD, which would clear the parking instructions 10 seconds after a detection to prepare the interface for the next arrival.
+If given one more hour, we would focus on designing a custom 3D-printed enclosure to securely house the Raspberry Pi 4B and provide a fixed, vibration-resistant mount for the camera and ultrasonic sensors. This would ensure the "tripwire" alignment remains consistent in real-world environments. Additionally, I would implement a "Screen Timeout" logic for the I2C LCD, which would clear the parking instructions 10 seconds after a detection to prepare the interface for the next arrival.
 
 # 19. Final Submission Checklist
 
