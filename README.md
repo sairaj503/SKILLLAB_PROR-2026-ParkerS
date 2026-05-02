@@ -106,7 +106,6 @@ It’s only after the ultrasonic sensor detects an object within 15cm that it wa
 ## 3.1 User Journey 
 
 A driver enters a parking area looking for a place to park his car. Instead of guessing or driving around aimlessly, he notices a display board at the entrance showing the current status of parking slots. It clearly indicates how many slots are occupied and how many are available. As a car leaves a slot, the system instantly updates—changing the slot status from occupied to vacant using sensor detection and camera verification. The user quickly checks the display, sees that a slot is free, and parks his car without confusion or delay. Once he parks, the system detects his car, verifies it, and updates the display again to reflect the new occupancy. This continuous real-time update ensures that every user gets accurate parking information, making the process faster, more efficient, and hassle-free.                                
----
 
 # 4. Definition of Success
 
@@ -182,23 +181,7 @@ The system displays the parking status using LEDs and an LCD display. Each slot 
 
 # 6. System Design, Sketches and Visual Planning 
 
-## 6.1 Concept Architecture/sketch/schematic
-
-Add an early sketch of the full idea.
-
-**Insert image below:**  
-`<img width="1152" height="2272" alt="image" src="https://github.com/user-attachments/assets/8db896a4-f7ac-415e-bdc9-bcebd244a392" />
-`
-
-Example:
-
-```md
-
-```
-
-
-
-## 6.2 Labeled Build Sketch/architecture/flow diagram/algorithm
+## 6.1 Labeled Build Sketch/architecture/flow diagram/algorithm
 
 Add a sketch with labels showing:
 
@@ -209,8 +192,8 @@ Add a sketch with labels showing:
 - output elements.
 
 **Insert image below:**  
-
-## 6.3 Approximate Dimensions
+<img width="1152" height="2272" alt="image" src="images/Architecture_sketch.jpeg" />
+## 6.2 Approximate Dimensions
 
 | Dimension        | Value   |
 | ---------------- | ------- |
