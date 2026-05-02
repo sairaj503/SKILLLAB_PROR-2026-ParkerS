@@ -463,47 +463,24 @@ The single biggest uncertainty at this stage is the Real-Time Scaling Latency un
 
 | Tester      | What They Did                        | What Confused Them                    | What They Enjoyed                         | What You Will Change                          |
 | ----------- | ------------------------------------ | ------------------------------------- | ----------------------------------------- | --------------------------------------------- |
-| `Gopal` | `Tried navigating through obstacles` | `Some obstacles ewren't clear enough` | `Liked projection + real car interaction` | `Add a slight red highlight around obstacles` |
-
+| `Sairaj & Werda` | `Tried navigating through obstacles` | `Some obstacles ewren't clear enough` | `Liked projection + real car interaction` | `Add a slight red highlight around obstacles` |
+| `Vivek & Dhriti` | `Tested the physical entry sequence (sensor to AI).` | `The initial 30-second polling logic made the system feel unresponsive.` | `The high accuracy of the real-time vehicle classification.` | `Pivoted to a reactive model; removed polling delays to eliminate system lag.` |
 
 ---
 
 # 15. Build Documentation
 
-## 15.1 Fabrication Process(if any)
+## 15.1 Fabrication Process
 
-Describe how the project was physically made.
 
-Include:
+**Describe how the project was physically made:** An HC-SR04 ultrasonic sensor and an I2C LCD screen (lit up with blue and red) are standing upright, temporarily positioned next to and on an upright protoboard. A red toy sports car is placed on a sheet of white paper nearby for sensing testing. An intricate web of colorful jumper wires connects everything to a partially visible Raspberry Pi.
+**Cutting & 3D Printing:** There was no specific cutting or 3D printing of custom parts for this functional prototype stage.
+**Assembly & Fastening:** Components are standing on their own or lightly attached to the protoboard for temporary testing. The entire assembly is not a permanent build. Standoffs are used to stand the modules up.
+**Wiring:** Many colorful jumper wires connect the sensor, screen, and controller. Power and ground lines are distributed. A white ribbon cable is also visible.
+**Revisions:** The ribbon cable is labeled EXTC, indicating an active labeling and iterative development process. A pink case piece is visible nearby, potentially from a different or future version of the design.
 
-- cutting,
-- 3D printing,
-- assembly,
-- fastening,
-- wiring,
-- finishing,
-- revisions.
-
-**Response:**  
-`The fabrication process involved designing, manufacturing, assembling, and refining both the physical structure and electronic integration of the system.`
-
-`Design (CAD Modeling):
-The initial model was created using CAD software, where components were designed based on the actual dimensions of the electronic parts. This ensured accurate fitting and minimized errors during assembly.
-Cutting (Laser Cutting):
-The designed parts were fabricated using laser cutting techniques. Sheets were cut precisely according to the CAD model to create the structural base and mounts for components.`
-
-`Components were fixed using adhesives and mechanical supports. Certain parts were intentionally kept modular (not permanently fixed) to allow easy replacement and modification of electronics.
-Surface Finishing:
-Some parts were sanded to smooth rough edges after cutting. Sawdust mixed with adhesive was used to fill gaps and uneven edges, improving structural finish. The final structure was then painted for better aesthetics and durability.`
-
-`Environment Setup (Dark Room Fabrication):
-To enhance projection visibility, a controlled dark environment was created using Z-boards, paper sheets, and bedsheets. This minimized external light interference and improved projection clarity.
-Revisions and Iterations:
-Multiple adjustments were made throughout the process, including refining alignment, improving structural stability, repositioning components, and optimizing the interaction between the physical car and projected environment.`
 
 ## 16 Build Photos
-
-Add photos throughout the project.
 
 Suggested images:
 
@@ -527,23 +504,25 @@ Suggested images:
 
 ## 17.1 Final Description
 
-The final version of the project is an **Edge-AI Smart Parking Master Controller** powered by a Raspberry Pi 4B. The system utilizes a hardware-software "tripwire" mechanism where an **HC-SR04 ultrasonic sensor** acts as a low-power trigger to wake the **OV5647 camera module**. Once triggered, the system performs real-time vehicle classification using a **MobileNet SSD** deep learning model to distinguish between cars and motorcycles. This data is processed by a centralized routing logic that assigns the vehicle to a specific categorized slot, which is then instantly updated on a mobile-responsive **Flask Digital Twin** dashboard and a local **I2C LCD** display.
+The final version of the project is an Edge-AI Smart Parking Master Controller implemented on a Raspberry Pi 4B. The system utilizes a hardware-triggered vision pipeline where an HC-SR04 ultrasonic sensor acts as a low-power "tripwire." When a vehicle is detected within 15cm, the system activates the OV5647 camera module to capture a frame. This frame is processed locally using a MobileNet SSD model to classify the vehicle (e.g., car or motorcycle). The categorization logic then determines the appropriate parking zone and outputs the assignment (e.g., "GO TO SLOT C1") directly to a local I2C 16x2 LCD display for the driver.
 
 ## 17.2 What Works Well
 
-*   **Trigger Efficiency:** The sensor-fusion approach successfully prevents the CPU from overheating by only running AI inference when a physical object is detected within 15cm.
-*   **Classification Accuracy:** The MobileNet SSD model provides highly reliable results (>85% confidence) for identifying vehicle types under standard indoor lighting.
-*   **Digital Twin Synchronization:** The Flask-based web dashboard maintains a low-latency connection, updating slot occupancy status across the network in under 2 seconds.
+1.Reactive Logic: The transition from polling to a trigger-based system allows the Pi to stay idle until a vehicle arrives, significantly reducing CPU load.
+
+2.Local Feedback: The I2C LCD provides near-instant instructions to the driver once the AI classification is complete.
+
+3.Hardware Protection: The integration of the voltage divider ensures the Raspberry Pi handles the 5V sensor signals without risk of GPIO damage.
 
 ## 17.3 What Still Needs Improvement
 
-*   **Dynamic Lighting Resilience:** While accurate in stable light, the AI confidence scores drop in low-light or high-glare environments, suggesting a need for IR camera integration or auto-exposure software compensation.
-*   **Concurrent Vehicle Handling:** The current single-thread logic can only process one vehicle at a time; future iterations require asynchronous processing to manage simultaneous entries at multiple gates.
+1.Ambient Lighting: The classification accuracy fluctuates under poor lighting conditions; adding a dedicated LED light source or an IR camera would improve consistency.
+
+Classification Speed: While functional, optimizing the model for the OpenVINO toolkit or using a Coral USB Accelerator could further reduce inference time.
 
 ## 17.4 What Changed From the Original Plan
 
-The most significant architectural change was the removal of the **30-second polling logic** originally intended for system updates. During testing, it was discovered that using a fixed 30-second `time.sleep()` or interval check made the system extremely unresponsive and "laggy," causing it to miss vehicle arrivals that occurred during the sleep cycle. To resolve this, the plan was updated to a **reactive trigger-based model**, which killed the lag and ensured the hardware was only active when necessary, making the system significantly more efficient.
-How did the project change from the initial idea?
+Originally, the project was designed to use a 30-second polling logic to check for vehicles at regular intervals. However, during testing, this logic proved to be highly ineffective and laggy due to the heavy delays in the code execution loop. It often missed vehicle arrivals entirely if they occurred during the "sleep" period. We pivot to a reactive trigger-based model using the ultrasonic sensor, which eliminated the lag and ensured the system only processed data when a vehicle was physically present.
 
 # 18. Reflection
 
@@ -602,11 +581,4 @@ Before submission, confirm that:
 - [x] Playtesting notes are included
 - [x] Build photos are included
 - [x] Final reflection is written
-<img width="1131" height="1600" alt="image" src="" />
-
----
-
-
----
-
-
+<img width="1131" height="1600" alt="image" src="images/finalcircuit.jpeg" />
