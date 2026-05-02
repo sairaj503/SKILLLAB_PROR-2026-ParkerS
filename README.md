@@ -341,19 +341,25 @@ Include:
 
 | Task ID | Task                    | Owner    | Estimated Hours | Deadline     | Dependency | Status |
 | ------- | ----------------------- | -------- | ---------------:| ------------ | ---------- | ------ |
-| T1      | `[Finalize concept]`    | `[Both]` | `2`             | `1st April`  | `None`     | `Done` |
-
+| T1      | `[Finalize concept]`    | `[All]` | `1`             | `30th April`  | `None`     | `Done` |
+| T1      | `[Finalize electronic components]`    | `[Vivek & Dhriti]` | `0.5`             | `1st April`  | `None`     | `Done` |
+| T1      | `[Finalize model]`    | `[Sairaj & Werda]` | `1`             | `30th April`  | `None`     | `Done` |
+| T1      | `[Testing of basic circuit]`    | `[All]` | `1`             | `30th April`  | `None`     | `Done` |
+| T1      | `[Testing camera]`    | `[Sairaj & Werda]` | `1`             | `30th April`  | `None`     | `Done` |
+| T1      | `[PCB building]`    | `[Vivek & Dhriti]` | `1`             | `30th April`  | `None`     | `Done` |
+| T1      | `[Documentation]`    | `[Sairaj & Werda]` | `5`             | `2nd May`  | `None`     | `Done` |
+| T1      | `[Final testing of system]`    | `[All]` | `2`             | `2nd May`  | `None`     | `Done` |
 
 ## 10.3 Responsibility Split
 
 | Area                 | Main Owner     | Support Owner |
 | -------------------- | ----------     | ------------- |
-| Concept              | `[Mrugendra]`  | `[Jyoti]`     |
-| Electronics          | `[]`           | `[]`          |
-| Coding               | `[]`           | `[]`          |
-| Mechanical build     | `[]`           | `[]`          |
-| Testing              | `[]`           | `[]`          |
-| Documentation        | `[]`           | `[]`          |
+| Concept              | `[Dhriti]`  | `[Vivek]`     |
+| Electronics          | `[Vivek]`           | `[Dhriti]`          |
+| Coding               | `[Werda]`           | `[Sairaj]`          |
+| Mechanical build     | `[Dhriti]`           | `[Vivek]`          |
+| Testing              | `[Sairaj]`           | `[Werda]`          |
+| Documentation        | `[Werda]`           | `[Sairaj]`          |
 
 ---
 
@@ -368,10 +374,10 @@ Expected outcomes:
 - [x] Idea finalized
 - [x] Core interaction decided
 - [x] Sketches made
-- [x] BOM completed
-- [x] Purchase needs identified
+- [ ] BOM completed
+- [ ] Purchase needs identified
 - [ ] Key uncertainty identified
-- [x] Basic feasibility tested
+- [ ] Basic feasibility tested
 
 ### Bi Hour 2 — Build Subsystems
 
@@ -391,14 +397,14 @@ Expected outcomes:
 - [x] Electronics integrated
 - [x] Code connected to hardware
 - [ ] App connected if required
-- [x] First playable version exists
+- [ ] First playable version exists
 
 ### Bi Hour 4 — Refine and Finish
 
 Expected outcomes:
 
 - [x] Technical bugs reduced
-- [x] Playtesting completed
+- [x] Testing completed
 - [x] Improvements made
 - [x] Documentation completed
 - [x] Final build ready
@@ -407,10 +413,9 @@ Expected outcomes:
 
 | Days   | Planned Goal   | What Actually Happened | What Changed   | Next Steps     |
 | ------ | -------------- | ---------------------- | -------------- | -------------- |
-| Day 1 | `[Write here]` | `[Write here]`         | `[Write here]` | `[Write here]` |
-| Day 2 | `[Write here]` | `[Write here]`         | `[Write here]` | `[Write here]` |
-| Day 3 | `[Write here]` | `[Write here]`         | `[Write here]` | `[Write here]` |
-| Day 4 | `[Write here]` | `[Write here]`         | `[Write here]` | `[Write here]` |
+| Day 1 | `[Establish proximity sensing and local UI feedback.]` | `[Successfully wired HC-SR04 and I2C LCD; implemented distance-based logic.]`         | `[Added a voltage divider (1kΩ/2kΩ) to the Echo pin to protect Pi 3.3V GPIOs.]` | `[Integrate camera-based verification.]` |
+| Day 2 | `[Implement AI vehicle classification via CSI camera.]` | `[Resolved "failed to allocate memory" errors on RPi OS Bookworm; loaded MobileNet SSD.]`         | `[Switched to V4L2 backend and libcamerify to bypass new OS driver limitations.]` | `[Develop centralized routing for Car/Bike groups.]` |
+
 
 ---
 
@@ -418,33 +423,40 @@ Expected outcomes:
 
 ## 13.1 Risk Register
 
-| Risk                                                            | Type         | Likelihood | Impact   | Mitigation Plan                                                                       | Owner                |
-| --------------------------------------------------------------- | ------------ | ---------- | -------- | ------------------------------------------------------------------------------------- | -------------------- |
-| WiFi connection between laptop and ESP32 becomes unstable       | `Technical`  | `Medium`   | `High`   | Keep ESP32 close, ensure stable power supply, reduce network load, add fail-safe stop | `[Gopal]`           |
-
+| Risk | Owner | Type | Likelihood | Impact | Mitigation Plan |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| High latency in AI detection causing vehicle miss | `[Sairaj]` | `Technical` | `Medium` | `High` | Implement sensor-based hardware triggers to wake the camera 1s before vehicle arrival. |
+| Inaccurate distance readings due to sensor signal noise | `[Sairaj]` | `Technical` | `Low` | `Medium` | Implement a median filtering algorithm in Python to smooth out ultrasonic data spikes. |
+| Raspberry Pi thermal throttling under continuous AI load | `[Sairaj]` | `Hardware` | `Low` | `Medium` | Utilize active cooling (heat sinks/fan) and software sleep modes when the lot is empty. |
+| Variable lighting conditions affecting AI confidence scores | `[Sairaj]` | `Technical` | `Medium` | `High` | Use Histogram Equalization (OpenCV) to normalize frames before running inference. |
 
 ## 13.2 Biggest Unknown Right Now
 
-What is the single biggest uncertainty in your project at this stage?
-
-**Response:**  
-
-
----
+The single biggest uncertainty at this stage is the Real-Time Scaling Latency under Peak Load. While the system functions efficiently with a single vehicle and limited sensors, the primary unknown is whether the Raspberry Pi 4B can maintain consistent 30 FPS inference speeds while simultaneously hosting the Flask "Digital Twin" dashboard and managing rapid-fire GPIO interrupts from multiple parking zones. Ensuring the system remains within the defined 2-second "Usability" latency threshold during high-traffic scenarios, where multiple sensors trigger near-simultaneously, is the critical technical hurdle currently being validated.
 
 # 14. Testing 
 
 ## 14.1 Technical Testing Plan
 
-| What Needs Testing     | How You Will Test It                                                                 | Success Condition                                                                                    |
-| ---------------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
-| `[Wifi connection]`    | `[Check if motor spins via app button]`                                              | `[Both motors accurately respond to wifi signals]`                                                   |
-                       |
+# 14. Testing
+
+## 14.1 Technical Testing Plan
+
+| What Needs Testing | How You Will Test It | Success Condition |
+| :--- | :--- | :--- |
+| **Proximity Tripwire** | Place an object at varying distances (10cm, 20cm, 30cm) from the HC-SR04. | System status changes to `ANALYZING` only when the object is within the <15cm threshold. |
+| **AI Classification** | Present the toy car and toy bike individually to the OV5647 camera module. | MobileNet SSD correctly identifies `car` and `motorbike` with a confidence score >0.5. |
+| **Categorized Routing** | Trigger a detection for each vehicle type sequentially. | The system correctly assigns `C1` for the car and `B1` for the bike as per the Master Controller logic. |
+| **Dashboard Latency** | Trigger a status change and observe the update on a remote mobile device. | The Flask Digital Twin reflects the `OCCUPIED` state in the correct zone within 2 seconds. |
+| **Forensic Scan** | Simulate a "spill" (black paper) after a car departs the slot. | System detects a high "Sum of Difference" against the reference image and flags a maintenance alert. |  
+
 ## 14.2 Testing and Debugging Log
 
 | Date          | Problem Found                         | Type         | What You Tried                                | Result               | Next Action                                    |
 | ------------- | ------------------------------------- | ------------ | --------------------------------------------- | -------------------- | ---------------------------------------------- |
-| `18th April`  | `Car not balancing properly`          | `Mechanical` | `Add low-friction caster support to one side` | `Worked`             | `improve caster structure`                     |
+| `30th April`  | `RPi Camera initialization failure on Bookworm OS`          | `Software` | `Used libcamerify wrapper and cv2.CAP_V4L2 backend` | `Worked`             | `Implement MobileNet SSD inference`                     |
+| `2nd May`  | `High latency in Digital Twin dashboard updates`          | `Technical` | `Optimized Flask background threading and reduced frame resolution` | `Worked`             | `Conduct final stress test with multiple vehicle types`                     |
+
 
 
 ## 14.3 Playtesting Notes
