@@ -513,84 +513,73 @@ Suggested images:
 - mechanism test,
 - app screenshot,
 - final build.
-- <img width="960" height="1280" alt="WhatsApp Image 2026-04-24 at 9 46 02 AM (1)" src="https://github.com/user-attachments/assets/74baa570-5770-483e-be6d-d2f03386e37c" />
+- <img width="960" height="1280" alt="image" src="images/1op.jpeg" />
+- <img width="960" height="1280" alt="image" src="images/2op.jpeg" />
+- <img width="960" height="1280" alt="image" src="images/3op.jpeg" />
+- <img width="960" height="1280" alt="image" src="images/4op.jpeg" />
+- <img width="960" height="1280" alt="image" src="images/5op.jpeg" />
+- <img width="960" height="1280" alt="image" src="images/6op.jpeg" />
 
 
-
-
+# 17. Final Outcome
 
 # 17. Final Outcome
 
 ## 17.1 Final Description
 
-Describe the final version of your project.
-
-**Response:**  
-
+The final version of the project is an **Edge-AI Smart Parking Master Controller** powered by a Raspberry Pi 4B. The system utilizes a hardware-software "tripwire" mechanism where an **HC-SR04 ultrasonic sensor** acts as a low-power trigger to wake the **OV5647 camera module**. Once triggered, the system performs real-time vehicle classification using a **MobileNet SSD** deep learning model to distinguish between cars and motorcycles. This data is processed by a centralized routing logic that assigns the vehicle to a specific categorized slot, which is then instantly updated on a mobile-responsive **Flask Digital Twin** dashboard and a local **I2C LCD** display.
 
 ## 17.2 What Works Well
 
-
+*   **Trigger Efficiency:** The sensor-fusion approach successfully prevents the CPU from overheating by only running AI inference when a physical object is detected within 15cm.
+*   **Classification Accuracy:** The MobileNet SSD model provides highly reliable results (>85% confidence) for identifying vehicle types under standard indoor lighting.
+*   **Digital Twin Synchronization:** The Flask-based web dashboard maintains a low-latency connection, updating slot occupancy status across the network in under 2 seconds.
 
 ## 17.3 What Still Needs Improvement
 
+*   **Dynamic Lighting Resilience:** While accurate in stable light, the AI confidence scores drop in low-light or high-glare environments, suggesting a need for IR camera integration or auto-exposure software compensation.
+*   **Concurrent Vehicle Handling:** The current single-thread logic can only process one vehicle at a time; future iterations require asynchronous processing to manage simultaneous entries at multiple gates.
 
 ## 17.4 What Changed From the Original Plan
 
+The most significant architectural change was the removal of the **30-second polling logic** originally intended for system updates. During testing, it was discovered that using a fixed 30-second `time.sleep()` or interval check made the system extremely unresponsive and "laggy," causing it to miss vehicle arrivals that occurred during the sleep cycle. To resolve this, the plan was updated to a **reactive trigger-based model**, which killed the lag and ensured the hardware was only active when necessary, making the system significantly more efficient.
 How did the project change from the initial idea?
-
-**Response:**  
-
-
----
 
 # 18. Reflection
 
 ## 18.1 Team Reflection
 
-What did your team do well?  
-What slowed you down?  
-How well did you manage time, tasks, and responsibilities?
-
-**Response:**  
-
+The team excelled in hardware-software integration, specifically in getting the camera stack to communicate with the AI logic on the newer OS. We were slowed down significantly by the Raspberry Pi Bookworm OS camera drivers, which required extensive troubleshooting to initialize properly and also our I2C failed out-of-nowhere. We managed our time by splitting the tasks into "Sensor Logic" and "Vision Inference," which allowed us to debug the hardware components individually before combining them into the final Master Controller.
 
 ## 18.2 Technical Reflection
 
-What did you learn about:
+1.Electronics: Learned to design voltage dividers using 1kΩ and 2kΩ resistors to safely interface 5V sensors with 3.3V logic.
 
-- electronics,
-- coding,
-- mechanisms,
-- fabrication,
-- integration?
+2.Coding: Gained experience in OpenCV DNN module implementation and managing V4L2 camera backends on Linux.
 
-**Response:**  
+3.Mechanisms: Understood the advantage of event-driven triggers over software loops to solve system latency and lag.
 
+4.Fabrication: Learned the importance of precise sensor housing and alignment to ensure the ultrasonic "tripwire" doesn't trigger on environmental noise.
+
+5.Integration: Successfully merged I2C, CSI, and GPIO protocols into a single Python script that manages the entire parking entry sequence.
 
 ## 18.3 Design Reflection
 
-What did you learn about:
+Designing: Learned to move from abstract ideas to a functional system architecture that balances hardware constraints with software requirements.
 
-- designing ,
-- delight,
-- clarity,
-- physical interaction,
-- understanding,
-- iteration?
+Delight: Experienced the "Aha!" moment when the AI correctly classified a vehicle and the LCD updated instantly—proving the logic worked in the real world.
 
-**Response:**  
+Clarity: Realized that user instructions must be extremely concise; replacing long sentences with "GO TO SLOT C1" provided much better guidance for a moving driver.
 
+Physical Interaction: Discovered how to use hardware (ultrasonic sensors) to gate software (AI inference), creating a physical "tripwire" that saves power and CPU cycles.
+
+Understanding: Gained a deep understanding of the Linux camera stack and how new OS drivers (Bookworm) change how we interact with hardware at a low level.
+
+Iteration: Successfully pivoted from a laggy 30-second polling loop to a high-performance reactive model after the first prototype failed to meet latency requirements.
 
 ## 18.4 If You Had One More hour
 
-What would you improve next?
-
-**Response:**  
-
-` `
-
----
+If given one more hour, I would focus on designing a custom 3D-printed enclosure to securely house the Raspberry Pi 4B and provide a fixed, vibration-resistant mount for the camera and ultrasonic sensors. This would ensure the "tripwire" alignment remains consistent in real-world environments. Additionally, I would implement a "Screen Timeout" logic for the I2C LCD, which would clear the parking instructions 10 seconds after a detection to prepare the interface for the next arrival.
 
 # 19. Final Submission Checklist
 
