@@ -51,7 +51,7 @@
 
 ## 2.2 Original Twist
 
-Most basic, cheap smart parking systems rely entirely on ultrasonic sensors. However, those sensors are kind of "dumb"—if a person walks by or someone drops a box in the parking spot, the sensor simply gets blocked and falsely flags the slot as "occupied." On the flip side, relying *only* on a camera can sometimes be tricked by 2D images, shadows, or passing traffic.
+Most basic, cheap smart parking systems rely entirely on ultrasonic sensors. However if a person walks by or someone drops a box in the parking spot, the sensor simply gets blocked and falsely flags the slot as "occupied." On the flip side, relying *only* on a camera can sometimes be tricked by 2D images, shadows, or passing traffic.
 
 Our original twist is mashing both approaches together to cover each other's flaws using a **Sensor Fusion** method. 
 
